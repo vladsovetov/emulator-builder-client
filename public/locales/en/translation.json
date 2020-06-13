@@ -1,0 +1,12 @@
+{
+    "ui": {
+        "logout": "Logout",
+        "constructor": {
+            "title": "Constructor",
+            "menu": {
+                "panels": "Panels",
+                "logout": "$t(ui.logout)"
+            }
+        }
+    }
+}

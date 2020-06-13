@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from 'react'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+
+import TopBar from './components/TopBar/TopBar'
+import Content from './components/Content/Content'
+
+// import './App.css'
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+    },
+  })
+)
 
 function App() {
+  const classes = useStyles()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Suspense fallback="Loading...">
+      <div className={classes.root}>
+        <TopBar />
+        <Content />
+      </div>
+    </Suspense>
+  )
 }
 
-export default App;
+export default App
