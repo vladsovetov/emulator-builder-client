@@ -1,14 +1,14 @@
-import React from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { useTranslation } from 'react-i18next'
+import React from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   Button,
-} from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
       background: 'white',
     },
   })
-)
+);
 
 const TopBar = () => {
-  const { t } = useTranslation()
-  const classes = useStyles()
+  const { t } = useTranslation();
+  const classes = useStyles();
   return (
     <AppBar position="static">
       <Toolbar>
@@ -52,7 +52,7 @@ const TopBar = () => {
         <Button color="inherit">{t('ui.constructor.menu.logout')}</Button>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default TopBar
+export default TopBar;

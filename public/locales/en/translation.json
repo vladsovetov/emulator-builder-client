@@ -1,11 +1,20 @@
 {
     "ui": {
         "logout": "Logout",
+        "name": "Name",
+        "px": "px",
         "constructor": {
             "title": "Constructor",
             "menu": {
                 "panels": "Panels",
                 "logout": "$t(ui.logout)"
+            },
+            "controls": {
+                "name": "$t(ui.name)",
+                "width": "Width",
+                "height": "Height",
+                "borderRadius": "Border radius",
+                "padding": "Padding"
             }
         }
     }
