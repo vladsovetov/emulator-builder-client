@@ -1,12 +1,14 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
+import GridCell from './GridCell/GridCell';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: 'absolute',
-      height: '100%',
       width: '100%',
+      height: '100%',
     },
     line: {
       position: 'absolute',
@@ -23,51 +25,58 @@ type PanelGridProps = {
   cellsGrid: {
     [key: string]: string | number;
   };
-  height: number;
   width: number;
+  height: number;
 };
 
 const PanelGrid = (props: PanelGridProps) => {
   const classes = useStyles();
-  const lineThickness = 1;
   const cellWidth = +props.cellsGrid.width;
   const cellHeight = +props.cellsGrid.height;
+  const horizontalSpace = +props.cellsGrid.verticalSpace;
+  const verticalSpace = +props.cellsGrid.verticalSpace;
 
-  const renderLines = (
-    cellSize: number,
-    lineDirection: 'vertical' | 'horizontal' = 'vertical'
-  ) => {
-    const containerSide =
-      lineDirection === 'vertical' ? props.width : props.height;
-    let cells =
-      cellSize > 0 ? Math.floor(containerSide / (cellSize + lineThickness)) : 0;
-    const lines = [];
-    const shift =
-      (containerSide - (cellSize * cells + (lineThickness * cells + 1))) / 2;
-    for (let ind = 0; ind <= cells; ind++) {
-      const style =
-        lineDirection === 'vertical'
-          ? {
-              left: shift + ind * (cellSize + lineThickness),
-              height: '100%',
-              width: `${lineThickness}px`,
+  const renderCells = () => {
+    const columns =
+      cellWidth > 0
+        ? Math.floor(props.width / (cellWidth + horizontalSpace))
+        : 0;
+    const rows =
+      cellHeight > 0
+        ? Math.floor(props.height / (cellHeight + verticalSpace))
+        : 0;
+
+    const outlineSpace = {
+      horizontal: Math.round(
+        (props.width -
+          columns * (cellWidth + horizontalSpace) +
+          horizontalSpace) /
+          2
+      ),
+      vertical: Math.round(
+        (props.height - rows * (cellHeight + verticalSpace) + verticalSpace) / 2
+      ),
+    };
+    const cells: JSX.Element[] = [];
+    for (let rowInd = 0; rowInd < rows; rowInd++) {
+      for (let colInd = 0; colInd < columns; colInd++) {
+        cells.push(
+          <GridCell
+            key={rowInd * columns + colInd}
+            width={cellWidth}
+            height={cellHeight}
+            left={
+              colInd * (cellWidth + horizontalSpace) + outlineSpace.horizontal
             }
-          : {
-              top: shift + ind * (cellSize + lineThickness),
-              width: '100%',
-              height: `${lineThickness}px`,
-            };
-      lines.push(<div className={classes.line} key={ind} style={style}></div>);
+            top={rowInd * (cellHeight + verticalSpace) + outlineSpace.vertical}
+          />
+        );
+      }
     }
-    return lines;
+    return cells;
   };
 
-  return (
-    <div className={classes.root}>
-      {renderLines(cellWidth)}
-      {renderLines(cellHeight, 'horizontal')}
-    </div>
-  );
+  return <div className={classes.root}>{renderCells()}</div>;
 };
 
 export default PanelGrid;

@@ -25,6 +25,8 @@ const PanelBuilder = () => {
   const [cellsGrid, setCellsGrid] = useState({
     width: 32,
     height: 32,
+    verticalSpace: 8,
+    horizontalSpace: 8,
   });
 
   const handleControlsUpdate = (event: React.ChangeEvent) => {
