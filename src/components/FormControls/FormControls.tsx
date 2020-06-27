@@ -8,6 +8,8 @@ import {
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
+import Input from '../UI/Input/Input';
+
 type ControlFieldType = {
   [key: string]: string | number;
 };
@@ -50,7 +52,7 @@ const FormControls = (props: FormControlsProps) => {
 
           return (
             <FormControl key={key.toString()} className={classes.formControl}>
-              <TextField
+              <Input
                 variant="filled"
                 label={t(`ui.constructor.controls.${key}`)}
                 defaultValue={value}
@@ -75,4 +77,4 @@ const FormControls = (props: FormControlsProps) => {
   );
 };
 
-export default FormControls;
+export default React.memo(FormControls);

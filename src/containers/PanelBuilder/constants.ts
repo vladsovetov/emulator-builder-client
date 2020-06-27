@@ -1,0 +1,2 @@
+export const UPDATE_PANEL = 'UPDATE_PANEL';
+export const UPDATE_CELLS_GRID = 'UPDATE_CELLS_GRID';

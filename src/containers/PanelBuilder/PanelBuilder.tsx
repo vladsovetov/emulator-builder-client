@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { throttle } from 'throttle-debounce';
+import useConstant from 'use-constant';
+
+import { RootState } from '../../store';
+import {
+  updatePanel,
+  updateCellsGrid,
+} from '../../containers/PanelBuilder/actions';
 
 import FormControls from '../../components/FormControls/FormControls';
 import PanelConstructor from '../../components/PanelConstructor/PanelConstructor';
@@ -14,57 +23,68 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PanelBuilder = () => {
   const classes = useStyles();
-  const [panel, setPanel] = useState({
-    name: 'test panel',
-    width: 400,
-    height: 600,
-    borderRadius: 10,
-    padding: 16,
-  });
+  const panel = useSelector(
+    (state: RootState) => state.panelBuilderReducer.panel
+  );
+  const cellsGrid = useSelector(
+    (state: RootState) => state.panelBuilderReducer.cellsGrid
+  );
+  const dispatch = useDispatch();
 
-  const [cellsGrid, setCellsGrid] = useState({
-    width: 32,
-    height: 32,
-    verticalSpace: 8,
-    horizontalSpace: 8,
-  });
-
-  const handleControlsUpdate = (event: React.ChangeEvent) => {
-    const fieldName = event.target.getAttribute('data-name');
-    const fieldType = event.target.getAttribute('type');
-    let fieldValue: number | string = (event.target as HTMLInputElement).value;
-    if (fieldType === 'number') {
-      fieldValue = parseFloat(fieldValue);
-    }
-
-    if (fieldName !== null) {
-      setPanel((prevPanel) => ({
-        ...prevPanel,
-        [fieldName]: fieldValue,
-      }));
-    }
+  const handlePanelControlsUpdate = (event: React.ChangeEvent) => {
+    event.persist();
+    throttledPanelControlsUpdate(event);
   };
+
+  const throttledPanelControlsUpdate = useConstant(() =>
+    throttle(200, (event: React.ChangeEvent) => {
+      console.log('throttledPanelControlsUpdate');
+      const fieldName = event.target.getAttribute('data-name');
+      const fieldType = event.target.getAttribute('type');
+      let fieldValue: number | string = (event.target as HTMLInputElement)
+        .value;
+      if (fieldType === 'number') {
+        fieldValue = parseFloat(fieldValue);
+      }
+
+      if (fieldName !== null) {
+        dispatch(
+          updatePanel({
+            [fieldName]: fieldValue,
+          })
+        );
+      }
+    })
+  );
 
   const handleCellsGridControlsUpdate = (event: React.ChangeEvent) => {
-    const fieldName = event.target.getAttribute('data-name');
-    const fieldType = event.target.getAttribute('type');
-    let fieldValue: number | string = (event.target as HTMLInputElement).value;
-    if (fieldType === 'number') {
-      fieldValue = parseFloat(fieldValue);
-    }
-
-    if (fieldName !== null) {
-      setCellsGrid((prevPanel) => ({
-        ...prevPanel,
-        [fieldName]: fieldValue,
-      }));
-    }
+    event.persist();
+    throttledCellsGridControlsUpdate(event);
   };
+
+  const throttledCellsGridControlsUpdate = useConstant(() =>
+    throttle(200, (event: React.ChangeEvent) => {
+      const fieldName = event.target.getAttribute('data-name');
+      const fieldType = event.target.getAttribute('type');
+      let fieldValue: number | string = (event.target as HTMLInputElement)
+        .value;
+      if (fieldType === 'number') {
+        fieldValue = parseFloat(fieldValue);
+      }
+      if (fieldName !== null) {
+        dispatch(
+          updateCellsGrid({
+            [fieldName]: fieldValue,
+          })
+        );
+      }
+    })
+  );
 
   return (
     <>
       <div className={classes.controls}>
-        <FormControls data={panel} onUpdate={handleControlsUpdate} />
+        <FormControls data={panel} onUpdate={handlePanelControlsUpdate} />
       </div>
       <div className={classes.controls}>
         <FormControls

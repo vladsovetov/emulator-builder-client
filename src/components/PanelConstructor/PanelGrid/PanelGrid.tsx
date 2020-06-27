@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import GridCell from './GridCell/GridCell';
@@ -33,7 +33,7 @@ const PanelGrid = (props: PanelGridProps) => {
   const classes = useStyles();
   const cellWidth = +props.cellsGrid.width;
   const cellHeight = +props.cellsGrid.height;
-  const horizontalSpace = +props.cellsGrid.verticalSpace;
+  const horizontalSpace = +props.cellsGrid.horizontalSpace;
   const verticalSpace = +props.cellsGrid.verticalSpace;
 
   const renderCells = () => {
