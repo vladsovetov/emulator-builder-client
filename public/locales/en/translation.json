@@ -9,6 +9,8 @@
                 "panels": "Panels",
                 "logout": "$t(ui.logout)"
             },
+            "panelSettings": "Panel Settings",
+            "cellsGridSettings": "Cells Settings",
             "controls": {
                 "name": "$t(ui.name)",
                 "width": "Width",

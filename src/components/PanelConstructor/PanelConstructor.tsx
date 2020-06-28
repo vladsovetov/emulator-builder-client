@@ -11,6 +11,7 @@ type PanelConstructorProps = {
   cellsGrid: {
     [key: string]: string | number;
   };
+  cells: CellInterface[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,6 +42,7 @@ const PanelConstructor = (props: PanelConstructorProps) => {
       <div className={classes.panelBody}>
         <PanelGrid
           cellsGrid={props.cellsGrid}
+          cells={props.cells}
           height={panelBodyHeight}
           width={panelBodyWidth}
         />

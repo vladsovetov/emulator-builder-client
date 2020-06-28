@@ -2,9 +2,9 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Paper,
-  TextField,
   FormControl,
   InputAdornment,
+  FormLabel,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ type ControlFieldType = {
 };
 
 type FormControlsProps = {
+  label: string;
   data: ControlFieldType;
   onUpdate: (event: React.ChangeEvent) => void;
 };
@@ -41,6 +42,7 @@ const FormControls = (props: FormControlsProps) => {
   const { t } = useTranslation();
   return (
     <Paper className={classes.root}>
+      <FormLabel>{props.label}</FormLabel>
       <form className={classes.form}>
         {Object.entries(props.data).map(([key, value]) => {
           let type = 'text';

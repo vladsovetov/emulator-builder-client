@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import GridCell from './GridCell/GridCell';
@@ -25,6 +25,7 @@ type PanelGridProps = {
   cellsGrid: {
     [key: string]: string | number;
   };
+  cells: CellInterface[];
   width: number;
   height: number;
 };
@@ -60,9 +61,13 @@ const PanelGrid = (props: PanelGridProps) => {
     const cells: JSX.Element[] = [];
     for (let rowInd = 0; rowInd < rows; rowInd++) {
       for (let colInd = 0; colInd < columns; colInd++) {
+        const ind = rowInd * columns + colInd;
+        const activeCell = props.cells.find((cell) => cell.index === ind);
         cells.push(
           <GridCell
-            key={rowInd * columns + colInd}
+            key={ind}
+            index={ind}
+            active={activeCell ? true : false}
             width={cellWidth}
             height={cellHeight}
             left={

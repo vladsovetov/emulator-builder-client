@@ -1,9 +1,15 @@
 import { PanelType, CellGridType, PanelBuilderActionTypes } from './types';
-import { UPDATE_PANEL, UPDATE_CELLS_GRID } from './constants';
+import {
+  UPDATE_PANEL,
+  UPDATE_CELLS_GRID,
+  ADD_CELL,
+  REMOVE_CELL,
+} from './constants';
 
 interface StateInterface {
   panel: PanelType;
   cellsGrid: CellGridType;
+  cells: CellInterface[];
 }
 
 const initialState: StateInterface = {
@@ -20,6 +26,7 @@ const initialState: StateInterface = {
     verticalSpace: 8,
     horizontalSpace: 8,
   },
+  cells: [],
 };
 
 export default (state = initialState, action: PanelBuilderActionTypes) => {
@@ -40,6 +47,23 @@ export default (state = initialState, action: PanelBuilderActionTypes) => {
           ...action.payload,
         },
       };
+    case ADD_CELL: {
+      const updatedCells = state.cells.concat(action.payload);
+      return {
+        ...state,
+        cells: updatedCells,
+      };
+    }
+
+    case REMOVE_CELL: {
+      const updatedCells = state.cells.filter(
+        (cell) => cell.index !== action.payload.index
+      );
+      return {
+        ...state,
+        cells: updatedCells,
+      };
+    }
     default:
       return state;
   }

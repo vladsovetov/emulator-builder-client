@@ -1,4 +1,9 @@
-import { UPDATE_PANEL, UPDATE_CELLS_GRID } from './constants';
+import {
+  UPDATE_PANEL,
+  UPDATE_CELLS_GRID,
+  ADD_CELL,
+  REMOVE_CELL,
+} from './constants';
 
 export type PanelType = {
   name: string;
@@ -25,4 +30,18 @@ export type UpdateCellsGridAction = {
   payload: CellGridType;
 };
 
-export type PanelBuilderActionTypes = UpdatePanelAction | UpdateCellsGridAction;
+export type AddCellAction = {
+  type: typeof ADD_CELL;
+  payload: CellInterface;
+};
+
+export type RemoveCellAction = {
+  type: typeof REMOVE_CELL;
+  payload: CellInterface;
+};
+
+export type PanelBuilderActionTypes =
+  | UpdatePanelAction
+  | UpdateCellsGridAction
+  | AddCellAction
+  | RemoveCellAction;
