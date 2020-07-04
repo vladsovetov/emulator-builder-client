@@ -1,35 +1,48 @@
-import { PanelType, CellGridType } from './types';
 import {
   UPDATE_PANEL,
-  UPDATE_CELLS_GRID,
-  ADD_CELL,
-  REMOVE_CELL,
+  UPDATE_ELEMENT,
+  CREATE_ELEMENT,
+  REMOVE_ELEMENT,
+  SELECT_ELEMENT,
 } from './constants';
 
-export function updatePanel(panel: Partial<PanelType>) {
+export function updatePanel(elementFields: Partial<Panel>) {
   return {
     type: UPDATE_PANEL,
-    payload: panel,
+    payload: elementFields,
   };
 }
 
-export function updateCellsGrid(cellsGrid: Partial<CellGridType>) {
+export function updateElement(
+  id: number,
+  elementFields: Partial<PanelElement>
+) {
   return {
-    type: UPDATE_CELLS_GRID,
-    payload: cellsGrid,
+    type: UPDATE_ELEMENT,
+    payload: {
+      id,
+      elementFields,
+    },
   };
 }
 
-export function addCell(cell: CellInterface) {
+export function createElement(element: PanelElement) {
   return {
-    type: ADD_CELL,
-    payload: cell,
+    type: CREATE_ELEMENT,
+    payload: element,
   };
 }
 
-export function removeCell(cell: CellInterface) {
+export function removeElement(element: PanelElement) {
   return {
-    type: REMOVE_CELL,
-    payload: cell,
+    type: REMOVE_ELEMENT,
+    payload: element,
+  };
+}
+
+export function selectElement(id: number) {
+  return {
+    type: SELECT_ELEMENT,
+    payload: id,
   };
 }

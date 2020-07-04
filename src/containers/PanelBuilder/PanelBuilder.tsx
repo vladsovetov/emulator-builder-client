@@ -1,17 +1,17 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { throttle } from 'throttle-debounce';
-import useConstant from 'use-constant';
 import { useTranslation } from 'react-i18next';
 
 import PanelBuilderContext from './panel-builder-context';
 import { RootState } from '../../store';
 import {
+  updateElement,
+  createElement,
+  selectElement,
   updatePanel,
-  updateCellsGrid,
-  addCell,
-  removeCell,
 } from '../../containers/PanelBuilder/actions';
 
 import FormControls from '../../components/FormControls/FormControls';
@@ -20,7 +20,10 @@ import PanelConstructor from '../../components/PanelConstructor/PanelConstructor
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     controls: {
-      marginBottom: '16px',
+      marginBottom: 16,
+    },
+    button: {
+      marginRight: 16,
     },
   })
 );
@@ -30,94 +33,125 @@ const PanelBuilder = () => {
   const panel = useSelector(
     (state: RootState) => state.panelBuilderReducer.panel
   );
-  const cellsGrid = useSelector(
-    (state: RootState) => state.panelBuilderReducer.cellsGrid
+  const elements = useSelector(
+    (state: RootState) => state.panelBuilderReducer.elements
   );
-  const cells = useSelector(
-    (state: RootState) => state.panelBuilderReducer.cells
+  const selectedElementId = useSelector(
+    (state: RootState) => state.panelBuilderReducer.selectedElementId
   );
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const handlePanelControlsUpdate = (event: React.ChangeEvent) => {
+  const handleControlsUpdate = (event: React.ChangeEvent) => {
     event.persist();
-    throttledPanelControlsUpdate(event);
+    throttledControlsUpdate(event);
   };
 
-  const throttledPanelControlsUpdate = useConstant(() =>
-    throttle(200, (event: React.ChangeEvent) => {
-      const fieldName = event.target.getAttribute('data-name');
-      const fieldType = event.target.getAttribute('type');
-      let fieldValue: number | string = (event.target as HTMLInputElement)
-        .value;
-      if (fieldType === 'number') {
-        fieldValue = parseFloat(fieldValue);
-      }
+  const throttledControlsUpdate = throttle(100, (event: React.ChangeEvent) => {
+    const fieldName = event.target.getAttribute('data-name');
+    const fieldType = event.target.getAttribute('type');
+    let fieldValue: number | string = (event.target as HTMLInputElement).value;
+    if (fieldType === 'number') {
+      fieldValue = parseFloat(fieldValue) || 0;
+    }
 
-      if (fieldName !== null) {
+    if (fieldName !== null) {
+      if (selectedElementId === 0) {
         dispatch(
           updatePanel({
             [fieldName]: fieldValue,
           })
         );
-      }
-    })
-  );
-
-  const handleCellsGridControlsUpdate = (event: React.ChangeEvent) => {
-    event.persist();
-    throttledCellsGridControlsUpdate(event);
-  };
-
-  const throttledCellsGridControlsUpdate = useConstant(() =>
-    throttle(200, (event: React.ChangeEvent) => {
-      const fieldName = event.target.getAttribute('data-name');
-      const fieldType = event.target.getAttribute('type');
-      let fieldValue: number | string = (event.target as HTMLInputElement)
-        .value;
-      if (fieldType === 'number') {
-        fieldValue = parseFloat(fieldValue);
-      }
-      if (fieldName !== null) {
+      } else {
         dispatch(
-          updateCellsGrid({
+          updateElement(selectedElementId, {
             [fieldName]: fieldValue,
           })
         );
       }
-    })
-  );
+    }
+  });
 
-  const handleAddCell = (cell: CellInterface) => {
-    dispatch(addCell(cell));
+  const handleAddElement = () => {
+    const element: PanelCell = {
+      id: elements.length + 1,
+      type: 'cell',
+      width: 42,
+      height: 42,
+      left: 10,
+      top: 10,
+    };
+    dispatch(createElement(element));
+    dispatch(selectElement(element.id));
   };
 
-  const handleRemoveCell = (cell: CellInterface) => {
-    dispatch(removeCell(cell));
+  const handleSelectElement = (id: number) => {
+    dispatch(selectElement(id));
   };
+
+  const handleSavePanel = () => {};
+
+  const getControlsTitle = () => {
+    if (selectedElementId === 0) {
+      return t('ui.constructor.panelSettings');
+    } else {
+      const type = elements.find((element) => element.id === selectedElementId)
+        ?.type;
+      switch (type) {
+        case 'cell':
+          return t('ui.constructor.cellSettings');
+        default:
+          return t('ui.constructor.settings');
+      }
+    }
+  };
+
+  let selectedElement: Panel | PanelElement = panel;
+  if (selectedElementId !== 0) {
+    const element = elements.find(
+      (element: PanelElement) => element.id === selectedElementId
+    );
+    if (element) {
+      selectedElement = element;
+    }
+  }
 
   return (
     <PanelBuilderContext.Provider
       value={{
-        addCell: handleAddCell,
-        removeCell: handleRemoveCell,
+        selectElement: handleSelectElement,
       }}
     >
       <div className={classes.controls}>
         <FormControls
-          label={t('ui.constructor.panelSettings')}
-          data={panel}
-          onUpdate={handlePanelControlsUpdate}
+          label={getControlsTitle()}
+          data={selectedElement}
+          onUpdate={handleControlsUpdate}
         />
       </div>
       <div className={classes.controls}>
-        <FormControls
-          label={t('ui.constructor.cellsGridSettings')}
-          data={cellsGrid}
-          onUpdate={handleCellsGridControlsUpdate}
-        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleAddElement}
+        >
+          {t('ui.constructor.controls.addElement')}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSavePanel}
+        >
+          {t('ui.constructor.controls.savePanel')}
+        </Button>
       </div>
-      <PanelConstructor panel={panel} cellsGrid={cellsGrid} cells={cells} />
+      <PanelConstructor
+        panel={panel}
+        elements={elements}
+        selectedElementId={selectedElementId}
+      />
     </PanelBuilderContext.Provider>
   );
 };

@@ -1,16 +1,11 @@
-import { PanelType, CellGridType, PanelBuilderActionTypes } from './types';
+import { PanelBuilderActionTypes, StateInterface } from './types';
 import {
   UPDATE_PANEL,
-  UPDATE_CELLS_GRID,
-  ADD_CELL,
-  REMOVE_CELL,
+  UPDATE_ELEMENT,
+  CREATE_ELEMENT,
+  REMOVE_ELEMENT,
+  SELECT_ELEMENT,
 } from './constants';
-
-interface StateInterface {
-  panel: PanelType;
-  cellsGrid: CellGridType;
-  cells: CellInterface[];
-}
 
 const initialState: StateInterface = {
   panel: {
@@ -20,13 +15,8 @@ const initialState: StateInterface = {
     borderRadius: 10,
     padding: 16,
   },
-  cellsGrid: {
-    width: 32,
-    height: 32,
-    verticalSpace: 8,
-    horizontalSpace: 8,
-  },
-  cells: [],
+  elements: [],
+  selectedElementId: 0,
 };
 
 export default (state = initialState, action: PanelBuilderActionTypes) => {
@@ -39,29 +29,42 @@ export default (state = initialState, action: PanelBuilderActionTypes) => {
           ...action.payload,
         },
       };
-    case UPDATE_CELLS_GRID:
+    case UPDATE_ELEMENT:
+      const elementInd = state.elements.findIndex(
+        (element) => element.id === action.payload.id
+      );
+      const updatedElements = [...state.elements];
+      if (elementInd > -1) {
+        const updatedElement = {
+          ...updatedElements[elementInd],
+          ...action.payload.elementFields,
+        };
+        updatedElements[elementInd] = updatedElement;
+      }
       return {
         ...state,
-        cellsGrid: {
-          ...state.cellsGrid,
-          ...action.payload,
-        },
+        elements: updatedElements,
       };
-    case ADD_CELL: {
-      const updatedCells = state.cells.concat(action.payload);
+    case CREATE_ELEMENT: {
+      const updatedElements = state.elements.concat(action.payload);
       return {
         ...state,
-        cells: updatedCells,
+        elements: updatedElements,
       };
     }
-
-    case REMOVE_CELL: {
-      const updatedCells = state.cells.filter(
-        (cell) => cell.index !== action.payload.index
+    case REMOVE_ELEMENT: {
+      const updatedElements = state.elements.filter(
+        (element) => element.id !== action.payload.id
       );
       return {
         ...state,
-        cells: updatedCells,
+        elements: updatedElements,
+      };
+    }
+    case SELECT_ELEMENT: {
+      return {
+        ...state,
+        selectedElementId: action.payload,
       };
     }
     default:

@@ -16,7 +16,7 @@ type ControlFieldType = {
 
 type FormControlsProps = {
   label: string;
-  data: ControlFieldType;
+  data: Panel | PanelElement;
   onUpdate: (event: React.ChangeEvent) => void;
 };
 
@@ -45,6 +45,10 @@ const FormControls = (props: FormControlsProps) => {
       <FormLabel>{props.label}</FormLabel>
       <form className={classes.form}>
         {Object.entries(props.data).map(([key, value]) => {
+          if (['id', 'type'].includes(key)) {
+            // ignore not changeable fields
+            return null;
+          }
           let type = 'text';
           let adornmentLabel = '';
           if (typeof value === 'number') {
@@ -57,7 +61,7 @@ const FormControls = (props: FormControlsProps) => {
               <Input
                 variant="filled"
                 label={t(`ui.constructor.controls.${key}`)}
-                defaultValue={value}
+                value={value}
                 type={type}
                 inputProps={{
                   'data-name': key,

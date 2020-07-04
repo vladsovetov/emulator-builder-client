@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-import PanelBuilder from '../../containers/PanelBuilder/PanelBuilder';
+type ContentProps = {
+  children: ReactElement;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,13 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Content = () => {
+const Content = ({ children }: ContentProps) => {
   const classes = useStyles();
-  return (
-    <main className={classes.root}>
-      <PanelBuilder />
-    </main>
-  );
+  return <main className={classes.root}>{children}</main>;
 };
 
 export default Content;

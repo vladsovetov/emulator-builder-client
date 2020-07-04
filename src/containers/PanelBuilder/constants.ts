@@ -1,4 +1,5 @@
 export const UPDATE_PANEL = 'UPDATE_PANEL';
-export const UPDATE_CELLS_GRID = 'UPDATE_CELLS_GRID';
-export const ADD_CELL = 'ADD_CELL';
-export const REMOVE_CELL = 'REMOVE_CELL';
+export const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
+export const CREATE_ELEMENT = 'CREATE_ELEMENT';
+export const REMOVE_ELEMENT = 'REMOVE_ELEMENT';
+export const SELECT_ELEMENT = 'SELECT_ELEMENT';

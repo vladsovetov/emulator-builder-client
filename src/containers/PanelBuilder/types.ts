@@ -1,47 +1,48 @@
 import {
   UPDATE_PANEL,
-  UPDATE_CELLS_GRID,
-  ADD_CELL,
-  REMOVE_CELL,
+  UPDATE_ELEMENT,
+  CREATE_ELEMENT,
+  REMOVE_ELEMENT,
+  SELECT_ELEMENT,
 } from './constants';
 
-export type PanelType = {
-  name: string;
-  width: number;
-  height: number;
-  borderRadius: number;
-  padding: number;
-};
-
-export type CellGridType = {
-  width: number;
-  height: number;
-  verticalSpace: number;
-  horizontalSpace: number;
-};
+export interface StateInterface {
+  panel: Panel;
+  elements: PanelElement[];
+  selectedElementId: number;
+}
 
 export type UpdatePanelAction = {
   type: typeof UPDATE_PANEL;
-  payload: PanelType;
+  payload: Partial<Panel>;
 };
 
-export type UpdateCellsGridAction = {
-  type: typeof UPDATE_CELLS_GRID;
-  payload: CellGridType;
+export type UpdateElementAction = {
+  type: typeof UPDATE_ELEMENT;
+  payload: {
+    id: number;
+    elementFields: Partial<PanelElement>;
+  };
 };
 
-export type AddCellAction = {
-  type: typeof ADD_CELL;
-  payload: CellInterface;
+export type CreateElementAction = {
+  type: typeof CREATE_ELEMENT;
+  payload: PanelElement;
 };
 
-export type RemoveCellAction = {
-  type: typeof REMOVE_CELL;
-  payload: CellInterface;
+export type RemoveElementAction = {
+  type: typeof REMOVE_ELEMENT;
+  payload: PanelElement;
+};
+
+export type SelectElementAction = {
+  type: typeof SELECT_ELEMENT;
+  payload: number;
 };
 
 export type PanelBuilderActionTypes =
   | UpdatePanelAction
-  | UpdateCellsGridAction
-  | AddCellAction
-  | RemoveCellAction;
+  | UpdateElementAction
+  | CreateElementAction
+  | RemoveElementAction
+  | SelectElementAction;

@@ -1,17 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Paper } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
-import PanelGrid from './PanelGrid/PanelGrid';
+import PanelBuilderContext from '../../containers/PanelBuilder/panel-builder-context';
+import PanelCell from './PanelCell/PanelCell';
 
 type PanelConstructorProps = {
-  panel: {
-    [key: string]: string | number;
-  };
-  cellsGrid: {
-    [key: string]: string | number;
-  };
-  cells: CellInterface[];
+  panel: Panel;
+  elements: PanelElement[];
+  selectedElementId: number;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,7 +22,17 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexGrow: 1,
       backgroundColor: 'white',
+      backgroundImage: `
+        linear-gradient(45deg, #353535 1px, transparent 1px),
+        linear-gradient(135deg, #353535 1px, transparent 1px),
+        linear-gradient(225deg, #353535 1px, transparent 1px),
+        linear-gradient(315deg, #353535 1px, transparent 1px)
+      `,
+      backgroundSize: '16px 16px',
       position: 'relative',
+    },
+    selected: {
+      outline: '2px solid blue',
     },
   })
 );
@@ -33,19 +40,32 @@ const useStyles = makeStyles((theme: Theme) =>
 const PanelConstructor = (props: PanelConstructorProps) => {
   const classes = useStyles();
   const { name, ...style } = props.panel;
-  const panelBodyWidth =
-    +props.panel.width - (props.panel.padding ? +props.panel.padding * 2 : 0);
-  const panelBodyHeight =
-    +props.panel.height - (props.panel.padding ? +props.panel.padding * 2 : 0);
+  const { selectElement } = useContext(PanelBuilderContext);
+
+  const panelClasses = [classes.root];
+  if (props.selectedElementId === 0) {
+    panelClasses.push(classes.selected);
+  }
   return (
-    <Paper className={classes.root} style={style}>
+    <Paper
+      className={panelClasses.join(' ')}
+      style={style}
+      onClick={() => selectElement(0)}
+    >
       <div className={classes.panelBody}>
-        <PanelGrid
-          cellsGrid={props.cellsGrid}
-          cells={props.cells}
-          height={panelBodyHeight}
-          width={panelBodyWidth}
-        />
+        {props.elements.map((element) => {
+          const selected = element.id === props.selectedElementId;
+          if (element.type === 'cell') {
+            return (
+              <PanelCell
+                key={element.id}
+                {...element}
+                className={selected ? classes.selected : ''}
+              />
+            );
+          }
+          return null;
+        })}
       </div>
     </Paper>
   );

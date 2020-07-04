@@ -1,24 +1,39 @@
 {
     "ui": {
-        "logout": "Logout",
         "name": "Name",
         "px": "px",
+        "menu": {
+            "cells": "Cells",
+            "panels": "Panels",
+            "logout": "Logout",
+            "login": "Login"
+        },
         "constructor": {
             "title": "Constructor",
-            "menu": {
-                "panels": "Panels",
-                "logout": "$t(ui.logout)"
-            },
+            "settings": "Settings",
             "panelSettings": "Panel Settings",
-            "cellsGridSettings": "Cells Settings",
+            "cellSettings": "Cell Settings",
             "controls": {
+                "addElement": "Add Element",
+                "savePanel": "Save Panel",
                 "name": "$t(ui.name)",
                 "width": "Width",
                 "height": "Height",
                 "borderRadius": "Border radius",
                 "padding": "Padding",
                 "verticalSpace": "Vertical space",
-                "horizontalSpace": "Horizontal space"
+                "horizontalSpace": "Horizontal space",
+                "left": "Left offset",
+                "top": "Top offset"
+            }
+        },
+        "authorization": {
+            "title": "Authorization",
+            "loginDescription": "Login to be able manage your records",
+            "controls": {
+                "email": "E-mail",
+                "password": "Password",
+                "login": "Login"
             }
         }
     }
