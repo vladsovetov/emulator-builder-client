@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Paper, FormLabel, FormControl, Button } from '@material-ui/core';
+import {
+  Paper,
+  FormLabel,
+  FormControl,
+  Button,
+  CircularProgress,
+} from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
+import { RootState } from '../../store';
 import { login } from './actions';
 import Input from '../../components/UI/Input/Input';
 
@@ -24,10 +31,16 @@ const useStyles = makeStyles((theme: Theme) =>
     formInput: {
       marginBottom: 8,
     },
+    loading: {
+      alignSelf: 'center',
+    },
   })
 );
 
 const Authorization = () => {
+  const isAuthInProgress = useSelector(
+    (state: RootState) => state.authorization.isAuthInProgress
+  );
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const classes = useStyles();
@@ -90,9 +103,13 @@ const Authorization = () => {
           />
         </FormControl>
 
-        <Button variant="contained" color="primary" onClick={handleOnLogin}>
-          {t('ui.authorization.controls.login')}
-        </Button>
+        {isAuthInProgress ? (
+          <CircularProgress className={classes.loading} />
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleOnLogin}>
+            {t('ui.authorization.controls.login')}
+          </Button>
+        )}
       </form>
     </Paper>
   );

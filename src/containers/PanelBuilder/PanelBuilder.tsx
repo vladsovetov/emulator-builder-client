@@ -30,14 +30,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PanelBuilder = () => {
   const classes = useStyles();
-  const panel = useSelector(
-    (state: RootState) => state.panelBuilderReducer.panel
-  );
+  const panel = useSelector((state: RootState) => state.panelBuilder.panel);
   const elements = useSelector(
-    (state: RootState) => state.panelBuilderReducer.elements
+    (state: RootState) => state.panelBuilder.elements
   );
   const selectedElementId = useSelector(
-    (state: RootState) => state.panelBuilderReducer.selectedElementId
+    (state: RootState) => state.panelBuilder.selectedElementId
   );
   const dispatch = useDispatch();
   const { t } = useTranslation();

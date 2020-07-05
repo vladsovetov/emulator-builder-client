@@ -23,10 +23,8 @@ interface PanelCell extends BasePanelElement {
 
 type PanelElement = PanelCell;
 
+type UserRoles = 'USER' | 'CREATOR' | 'ADMIN';
 interface User {
-  name: string;
-}
-
-interface Error {
-  message: string;
+  id: string;
+  role: UserRoles;
 }

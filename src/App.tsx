@@ -1,11 +1,14 @@
-import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { RootState } from './store';
+import { logout } from './containers/Authorization/actions';
+import { getTokenExpirationDelay } from './containers/Authorization/services';
+import { TOKEN_KEY } from './containers/Authorization/constants';
 
-import ProtectedRoute from './hoc/ProtectedRoute/ProtectedRoute';
+import SmartRoute from './hoc/SmartRoute/SmartRoute';
 import TopBar from './components/TopBar/TopBar';
 import Content from './components/Content/Content';
 import PanelBuilder from './containers/PanelBuilder/PanelBuilder';
@@ -25,10 +28,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function App() {
   const classes = useStyles();
-  const user = useSelector(
-    (state: RootState) => state.authorizationReducer.user
-  );
-  console.log(user);
+  const user = useSelector((state: RootState) => state.authorization.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log('app mounted');
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      const expirationDelay = getTokenExpirationDelay(token);
+      setTimeout(() => {
+        dispatch(logout());
+      }, expirationDelay);
+    }
+  }, [dispatch]);
   const isAuthorized = user !== null;
   return (
     <Suspense fallback="Loading...">
@@ -37,12 +49,20 @@ function App() {
           <TopBar isAuthorized={isAuthorized} />
           <Content>
             <Switch>
-              <ProtectedRoute path="/panels" isAuthorized={isAuthorized}>
+              <SmartRoute
+                path="/panels"
+                type="private"
+                isAuthorized={isAuthorized}
+              >
                 <PanelBuilder />
-              </ProtectedRoute>
-              <Route path="/login">
+              </SmartRoute>
+              <SmartRoute
+                path="/login"
+                type="publicOnly"
+                isAuthorized={isAuthorized}
+              >
                 <Authorization />
-              </Route>
+              </SmartRoute>
             </Switch>
           </Content>
         </Router>
