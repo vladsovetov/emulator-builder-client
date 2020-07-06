@@ -16,6 +16,7 @@ import TopBar from './components/TopBar/TopBar';
 import Content from './components/Content/Content';
 import PanelBuilder from './containers/PanelBuilder/PanelBuilder';
 import Authorization from './containers/Authorization/Authorization';
+import Logout from './containers/Authorization/Logout/Logout';
 
 // import './App.css'
 
@@ -57,6 +58,9 @@ function App() {
               </SmartRoute>
               <SmartRoute path="/login" roles={['GUEST']}>
                 <Authorization />
+              </SmartRoute>
+              <SmartRoute path="/logout" roles={[]}>
+                <Logout />
               </SmartRoute>
             </Switch>
           </Content>
