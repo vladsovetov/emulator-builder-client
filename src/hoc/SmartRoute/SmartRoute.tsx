@@ -1,43 +1,27 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 
+import { RootState } from '../../store';
+
 interface SmartRouteProps extends RouteProps {
-  isAuthorized: boolean;
-  type: 'private' | 'public' | 'publicOnly';
+  roles: UserRoles[];
 }
 
-const SmartRoute = ({
-  isAuthorized,
-  children,
-  type,
-  ...rest
-}: SmartRouteProps) => (
-  <Route
-    {...rest}
-    render={() => {
-      switch (type) {
-        case 'private': {
-          if (isAuthorized) {
-            return children;
-          } else {
-            return <Redirect to={{ pathname: '/' }} />;
-          }
-        }
-        case 'public': {
+const SmartRoute = ({ roles, children, ...rest }: SmartRouteProps) => {
+  const user = useSelector((state: RootState) => state.authorization.user);
+  const userRole: UserRoles = user ? user.role : 'GUEST';
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (!roles.length || roles.includes(userRole)) {
           return children;
+        } else {
+          return <Redirect to={{ pathname: '/' }} />;
         }
-        case 'publicOnly': {
-          if (!isAuthorized) {
-            return children;
-          } else {
-            return <Redirect to={{ pathname: '/' }} />;
-          }
-        }
-        default:
-          return children;
-      }
-    }}
-  />
-);
-
+      }}
+    />
+  );
+};
 export default SmartRoute;

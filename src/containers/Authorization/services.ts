@@ -28,3 +28,7 @@ export const getTokenExpirationDelay = (token: string) => {
 export const storeToken = (token: string) => {
   localStorage.setItem(TOKEN_KEY, token);
 };
+
+export const cleanToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+};

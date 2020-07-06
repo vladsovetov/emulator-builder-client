@@ -8,6 +8,7 @@ import {
   getUserFromJwt,
   getTokenExpirationDelay,
   storeToken,
+  cleanToken,
 } from './services';
 
 export function* login(action: any) {
@@ -28,6 +29,7 @@ export function* login(action: any) {
     yield put(loginSuccess(user));
     const expirationDelay = yield call(getTokenExpirationDelay, token);
     yield delay(expirationDelay);
+    yield call(cleanToken);
     yield put(logout());
   } catch (error) {
     yield put(loginFailed(error));

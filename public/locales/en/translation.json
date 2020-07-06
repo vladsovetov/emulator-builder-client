@@ -30,6 +30,10 @@
         "authorization": {
             "title": "Authorization",
             "loginDescription": "Login to be able manage your records",
+            "errors": {
+                "mandatoryField": "Please fill the mandatory field",
+                "incorrectFormat": "Incorrect format"
+            },
             "controls": {
                 "email": "E-mail",
                 "password": "Password",

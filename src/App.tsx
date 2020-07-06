@@ -5,7 +5,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { RootState } from './store';
 import { logout } from './containers/Authorization/actions';
-import { getTokenExpirationDelay } from './containers/Authorization/services';
+import {
+  getTokenExpirationDelay,
+  cleanToken,
+} from './containers/Authorization/services';
 import { TOKEN_KEY } from './containers/Authorization/constants';
 
 import SmartRoute from './hoc/SmartRoute/SmartRoute';
@@ -32,11 +35,11 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('app mounted');
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       const expirationDelay = getTokenExpirationDelay(token);
       setTimeout(() => {
+        cleanToken();
         dispatch(logout());
       }, expirationDelay);
     }
@@ -49,18 +52,10 @@ function App() {
           <TopBar isAuthorized={isAuthorized} />
           <Content>
             <Switch>
-              <SmartRoute
-                path="/panels"
-                type="private"
-                isAuthorized={isAuthorized}
-              >
+              <SmartRoute path="/panels" roles={['ADMIN']}>
                 <PanelBuilder />
               </SmartRoute>
-              <SmartRoute
-                path="/login"
-                type="publicOnly"
-                isAuthorized={isAuthorized}
-              >
+              <SmartRoute path="/login" roles={['GUEST']}>
                 <Authorization />
               </SmartRoute>
             </Switch>
